@@ -67,6 +67,7 @@ header {
 }
 
 .card-footer::after {
+  /* need to add generated password here */
   content: " ";
   display: block;
   clear: both;
