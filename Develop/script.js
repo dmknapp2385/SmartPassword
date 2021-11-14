@@ -1,20 +1,40 @@
 // Array of prompts with answers
 var prompts = [
   {
-    criteria: 'Upper case'
-
+    criteria: 'Upper case',
+    character:"",
+    randomNumber: function () {
+      number = Math.floor(Math.random() * 26) + 65;
+      this.character = String.fromCharCode(number);
+    } 
   },
   {
-    criteria: 'Lower case'
+    criteria: 'Lower case',
+    character:"",
+    randomNumber: function () {
+      number = Math.floor(Math.random() * 26) + 97;
+      this.character = String.fromCharCode(number);
+    } 
   },
   {
-    criteria: 'Special Character'
+    criteria: 'Special Character',
+    character:"",
+    randomNumber: function () {
+      number = Math.floor(Math.random() * 32) + 33;
+      // need to exclude the 10 numbers in sequence that correspond to integers 0-9
+      if (number >= 48 && number <= 57) {
+        this.randomNumber();
+      }
+      else {
+        this.character =String.fromCharCode(number);
+      }
+    } 
   },
   {
     criteria: 'Number',
-    number:"",
+    character:"",
     randomNumber: function () {
-       this. number = Math.floor(Math.random() * 10);
+       this.character = String(Math.floor(Math.random() * 10));
     } 
   }
 ];
@@ -22,7 +42,7 @@ var prompts = [
 // function for loop to get prompt responses
 var generateCriteria = function () {
   for (i = 0; 1 < 4; i++) {
-    var yesOrNo = window.prompt("Would you like your password to contain" + prompts[i].criteria + "? Respond with 'yes' or 'no'.");
+    var yesOrNo = window.prompt("Would you like your password to contain " + prompts[i].criteria + "? Respond with 'yes' or 'no'.");
     yesOrNo = yesOrNo.toLowerCase();
 
     var pickedPrompt = prompts[i]
@@ -38,26 +58,52 @@ var generateCriteria = function () {
   var checkCriteria = function () {
       for (i = 0; i < 4; i++) {
         counter = ''
-        if (prompts[i].value === true) {
+        if (prompts[i].value) {
           counter += 1;
         }
       }
-      if (counter = 0) {
+      if (counter === 0) {
       window.alert("You must check at aleast one criteria. Please try again.");
       generateCriteria();
     } 
   }
 }
 
-var generatePassword = function () {
-  generateCriteria();
-  // prompt to ask for length of password
-  var passwordLength = window.prompt("How many characters would you like your password to be? Choose a number between 8 and 123.")
+// prompt for password length
+var passwordLength = function () {
+  var promptLength = window.prompt("How many characters would you like your password to be? Choose a number between 8 and 123.")
   
-  passwordLength = parseInt(passwordLength);
+  promptLength = parseInt(promptLength);
 
+  if (!promptLength || promptLength < 8 || promptLength > 123) {
+    window.alert("This is not within the length requirements. Please choose again");
+    passwordLength();
+  }
+
+  else{
+    return promptLength;
+  }
 }
 
+var generatePassword = function () {
+  generateCriteria();
+  passwordLength();
+  // for loop to loop through number of characters in the promptlength
+  var addCharacters = function () {
+    password = '';
+    for (i=0; i<promptLength; i++) {
+    //choose random number between 0 and 4, check prompts index at that number and see if value is true, if it is, use the random number function from that prompt to generate random number/character
+      var chosenPrompt = Math.random() * 4
+      if (prompts[chosenPrompt].value) {
+        prompts[chosenPrompt].randomNumber();
+        password += prompts[chosenPrompt].character
+      }
+      else {
+        addCharacters();
+      }
+    }
+  }
+}
 // Get references to the #generate element
 var generateBtn = document.querySelector("#generate");
 
@@ -69,4 +115,4 @@ function writePassword() {
   passwordText.value = password;
 }
 
-generateBtn.addEventListener("click", writepassword()); 
+generateBtn.addEventListener("click", writePassword); 
