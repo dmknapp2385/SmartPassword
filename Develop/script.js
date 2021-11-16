@@ -41,21 +41,19 @@ var prompts = [
 
 // for loop to check that at least one prompt was a 'yes'
 var checkCriteria = function () {
-    var counter = 0
-    for (i = 0; i < 4; i++) {
+  var counter = 0
+  for (i = 0; i < 4; i++) {
     if (prompts[i].value) {
-      console.log(counter)
-      counter += 1;
+    console.log(counter)
+    counter += 1;
     }
   }
   if (counter === 0) {
     window.alert("You must check at aleast one criteria. Please try again.");
     generateCriteria();
   }
-  else {
-    break;
-  } 
 }
+
 // function for loop to get prompt responses
 function generateCriteria() {
   for (i = 0; i < 4; i++) {
@@ -93,23 +91,19 @@ var generatePassword = function () {
   generateCriteria();
   var promptLength = passwordLength();
   var password = '';
-  // for loop to loop through number of characters in the promptlength
-  var addCharacters = function () {
-    for (i=0; i < promptLength;) {
-    //choose random number between 0 and 4, check prompts index at that number and see if value is true, if it is, use the random number function from that prompt to generate random number/character
-      var chosenPrompt = Math.floor(Math.random() * 4)
-      if (prompts[chosenPrompt].value) {
-        prompts[chosenPrompt].randomNumber();
-        password += prompts[chosenPrompt].character
-        counter += 1;
-        i += 1;
-      }
-      else {
-        addCharacters();
-      }
+  var counter = 0;
+  // while loop to loop through number of characters in the promptlength
+  while (counter < promptLength) {
+  //choose random number between 0 and 4, check prompts index at that number and see if value is true, if it is, use the random number function from that prompt to generate random number/character
+    var chosenPrompt = Math.floor(Math.random() * 4)
+    if (prompts[chosenPrompt].value) {
+      prompts[chosenPrompt].randomNumber();
+      password += prompts[chosenPrompt].character
+      counter += 1;
+      console.log(prompts[chosenPrompt].value);
     }
-    return password;
   }
+  return password;
 }
 // Get references to the #generate element
 var generateBtn = document.querySelector("#generate");
@@ -122,4 +116,4 @@ function writePassword() {
   passwordText.value = password;
 }
 
-generateBtn.addEventListener("click", writePassword); 
+generateBtn.addEventListener("click", writePassword);
