@@ -41,23 +41,24 @@ var prompts = [
 
 // for loop to check that at least one prompt was a 'yes'
 var checkCriteria = function () {
-  for (i = 0; i < 4; i++) {
-    counter = ''
+    var counter = 0
+    for (i = 0; i < 4; i++) {
     if (prompts[i].value) {
+      console.log(counter)
       counter += 1;
     }
   }
   if (counter === 0) {
-  window.alert("You must check at aleast one criteria. Please try again.");
-  generateCriteria();
+    window.alert("You must check at aleast one criteria. Please try again.");
+    generateCriteria();
   }
   else {
-    passwordLength();
+    break;
   } 
 }
 // function for loop to get prompt responses
 function generateCriteria() {
-  for (i = 0; 1 < 4; i++) {
+  for (i = 0; i < 4; i++) {
     var pickedPrompt = prompts[i];
     var yesOrNo = window.prompt("Would you like your password to contain " + pickedPrompt.criteria + "? Respond with 'yes' or 'no'.");
     yesOrNo = yesOrNo.toLowerCase();
@@ -90,16 +91,18 @@ var passwordLength = function () {
 
 var generatePassword = function () {
   generateCriteria();
-  passwordLength();
+  var promptLength = passwordLength();
+  var password = '';
   // for loop to loop through number of characters in the promptlength
   var addCharacters = function () {
-    password = '';
-    for (i=0; i<promptLength; i++) {
+    for (i=0; i < promptLength;) {
     //choose random number between 0 and 4, check prompts index at that number and see if value is true, if it is, use the random number function from that prompt to generate random number/character
-      var chosenPrompt = Math.random() * 4
+      var chosenPrompt = Math.floor(Math.random() * 4)
       if (prompts[chosenPrompt].value) {
         prompts[chosenPrompt].randomNumber();
         password += prompts[chosenPrompt].character
+        counter += 1;
+        i += 1;
       }
       else {
         addCharacters();
