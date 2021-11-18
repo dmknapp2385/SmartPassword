@@ -44,7 +44,6 @@ var checkCriteria = function () {
   var counter = 0
   for (i = 0; i < 4; i++) {
     if (prompts[i].value) {
-    console.log(counter)
     counter += 1;
     }
   }
@@ -61,11 +60,11 @@ function generateCriteria() {
     var yesOrNo = window.prompt("Would you like your password to contain " + pickedPrompt.criteria + "? Respond with 'yes' or 'no'.");
     yesOrNo = yesOrNo.toLowerCase();
 
-    if (!yesOrNo || yesOrNo === 'no') {
-        pickedPrompt.value= false;
+    if (yesOrNo === 'yes') {
+        pickedPrompt.value= true;
     }
     else {
-        pickedPrompt.value= true;
+        pickedPrompt.value= false;
     }
   }
   checkCriteria();
@@ -77,33 +76,54 @@ var passwordLength = function () {
   
   promptLength = parseInt(promptLength);
 
-  if (!promptLength || promptLength < 8 || promptLength > 123) {
-    window.alert("This is not within the length requirements. Please choose again");
-    passwordLength();
-  }
-
-  else{
+  if (promptLength >= 8 && promptLength <= 123) {
     return promptLength;
   }
+
+  else {
+    window.alert("This is not within the length requirements. Please choose again");
+    return passwordLength();
+  }
 }
+
+var confirmCriteria = function (promptlength) {
+  var confirmedCriteria = []
+  for (var i = 0; i < 4; i++) {
+    console.log(prompts[i].criteria)
+    if (prompts[i].value) {
+      confirmedCriteria.push(prompts[i].criteria);
+    };
+  }
+  var confirmCriteriaString = confirmedCriteria.join(', ');
+  var confirmPrompt = window.confirm("You would like your password to contain " + confirmCriteriaString + " and be " + promptlength + " characters long. Is this correct?");
+
+  if (confirmPrompt) {
+    return true;
+  }
+    
+  else {
+     generateCriteria();
+  }
+}
+
 
 var generatePassword = function () {
   generateCriteria();
   var promptLength = passwordLength();
-  var password = '';
-  var counter = 0;
-  // while loop to loop through number of characters in the promptlength
-  while (counter < promptLength) {
-  //choose random number between 0 and 4, check prompts index at that number and see if value is true, if it is, use the random number function from that prompt to generate random number/character
-    var chosenPrompt = Math.floor(Math.random() * 4)
-    if (prompts[chosenPrompt].value) {
-      prompts[chosenPrompt].randomNumber();
-      password += prompts[chosenPrompt].character
-      counter += 1;
-      console.log(prompts[chosenPrompt].value);
+  if (confirmCriteria(promptLength));
+    var password = '';
+    var counter = 0;
+    // while loop to loop through number of characters in the promptlength
+    while (counter < promptLength) {
+    //choose random number between 0 and 4, check prompts index at that number and see if value is true, if it is, use the random number function from that prompt to generate random number/character
+      var chosenPrompt = Math.floor(Math.random() * 4)
+      if (prompts[chosenPrompt].value) {
+        prompts[chosenPrompt].randomNumber();
+        password += prompts[chosenPrompt].character
+        counter += 1;
+      }
     }
-  }
-  return password;
+    return password;
 }
 // Get references to the #generate element
 var generateBtn = document.querySelector("#generate");
