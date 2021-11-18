@@ -39,6 +39,8 @@ var prompts = [
   }
 ];
 
+var lenghtOfDesiredPassword = ''
+
 // for loop to check that at least one prompt was a 'yes'
 var checkCriteria = function () {
   var counter = 0
@@ -50,6 +52,9 @@ var checkCriteria = function () {
   if (counter === 0) {
     window.alert("You must check at aleast one criteria. Please try again.");
     generateCriteria();
+  }
+  else {
+    passwordLength();
   }
 }
 
@@ -77,7 +82,7 @@ var passwordLength = function () {
   promptLength = parseInt(promptLength);
 
   if (promptLength >= 8 && promptLength <= 123) {
-    return promptLength;
+    lenghtOfDesiredPassword = promptLength;
   }
 
   else {
@@ -86,7 +91,7 @@ var passwordLength = function () {
   }
 }
 
-var confirmCriteria = function (promptlength) {
+var confirmCriteria = function (lenghtOfDesiredPassword) {
   var confirmedCriteria = []
   for (var i = 0; i < 4; i++) {
     console.log(prompts[i].criteria)
@@ -95,7 +100,7 @@ var confirmCriteria = function (promptlength) {
     };
   }
   var confirmCriteriaString = confirmedCriteria.join(', ');
-  var confirmPrompt = window.confirm("You would like your password to contain " + confirmCriteriaString + " and be " + promptlength + " characters long. Is this correct?");
+  var confirmPrompt = window.confirm("You would like your password to contain " + confirmCriteriaString + " and be " + lenghtOfDesiredPassword + " characters long. Is this correct?");
 
   if (confirmPrompt) {
     return true;
@@ -109,12 +114,11 @@ var confirmCriteria = function (promptlength) {
 
 var generatePassword = function () {
   generateCriteria();
-  var promptLength = passwordLength();
-  if (confirmCriteria(promptLength));
+  if (confirmCriteria(lenghtOfDesiredPassword)) {
     var password = '';
     var counter = 0;
     // while loop to loop through number of characters in the promptlength
-    while (counter < promptLength) {
+    while (counter < lenghtOfDesiredPassword) {
     //choose random number between 0 and 4, check prompts index at that number and see if value is true, if it is, use the random number function from that prompt to generate random number/character
       var chosenPrompt = Math.floor(Math.random() * 4)
       if (prompts[chosenPrompt].value) {
@@ -124,6 +128,7 @@ var generatePassword = function () {
       }
     }
     return password;
+  }
 }
 // Get references to the #generate element
 var generateBtn = document.querySelector("#generate");
